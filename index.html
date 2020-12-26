@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Excel to Code Aligner</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="SuperGrids.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&family=Montserrat&display=swap">
+</head>
+<body>
+	<style>
+		:root{
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			font-family: 'Montserrat',sans-serif;
+		}
+		body{
+			height: 100%;
+			padding: 12px;
+			background-color: hsl(0,0%,10%);
+			color: white;
+		}
+		header{
+			height: 60px;
+			border-radius: 8px;
+			background-color: hsl(0,0%,15%);
+			box-shadow: 0 10px 40px hsla(0,0%,0%,.25);
+		}
+		textarea{
+			height: calc(50% - 30px);
+			border-radius: 0;
+			background-color: transparent;
+			color: white;
+			box-shadow: 0 1px hsla(0,0%,100%,.1);
+			resize: none;
+		}
+		textarea:focus{
+			background-color: transparent;
+			box-shadow: 0 1px hsla(0,0%,100%,.1);
+		}
+		#output{
+			height: calc(50% - 30px);
+			font-family: 'Anonymous Pro',monospace;
+			white-space: pre;
+		}
+	</style>
+</body>
+	<header class="h3 p-12">Excel to Code Aligner</header>
+	<textarea class="col-12 p-12 trim-x scroll-y" tabindex="-1" oninput="align(event)"></textarea>
+	<div id="output" class="p-12 trim-x scroll-y"></div>
+	<script>
+		const outputEle=document.getElementById('output')
+		function align(e){
+			const s=e.target.value
+			const rows=s.split('\n')
+			const rowCount=rows.length
+			let colCount=0
+			const rowsSplit=rows.map(r=>{
+				const rowSplit=r.split('\t')
+				colCount=Math.max(rowSplit.length,colCount)
+				return rowSplit
+			})
+			console.log(rowsSplit,rowCount,colCount)
+			for(let j=0;j<colCount;++j){
+				let max=0
+				for(let i=0;i<rowCount;++i) max=Math.max(rowsSplit[i][j].length,max)
+				for(let i=0;i<rowCount;++i) rowsSplit[i][j]+=' '.repeat(max-rowsSplit[i][j].length)
+			}
+			for(let i=0;i<rowCount;++i) rows[i]=rowsSplit[i].join('\t')
+			outputEle.innerText=rows.join('\n')
+		}
+	</script>
+</html>
